@@ -1,6 +1,38 @@
 # openMPI
 1. 下载压缩包（https://www.open-mpi.org/），版本>=1.8.8
-2. 忘了
+2. 解压
+`
+tar xzf tar xzf openmpi-5.0.2.tar.gz
+`
+3. 将解压后的目录改名为Trilinos
+`
+mv openmpi-5.0.2 openmpi
+`
+4. 在Trilinos中创建空的build文件，cd to it
+`
+cd openmpi
+mkdir build
+cd build
+'
+5.  配置，make and make install
+'
+# 不确定with-cuda是不是必须的，总之先加上吧
+$HOME/openmpi/configure --prefix=/usr/local/openmpi --with-cuda=/usr/local/cuda-12.4 --with-cuda-libdir=/usr/local/cuda-12.4/lib64
+make
+sudo make install
+'
+6. 将路径加入环境变量，打开bashrc：nano ~/.bashrc, 加入下面几行, 然后保存source ~/.bashrc
+'
+MPI_HOME=/usr/local/openmpi
+export PATH=${MPI_HOME}/bin:$PATH
+export LD_LIBRARY_PATH=${MPI_HOME}/lib:$LD_LIBRARY_PATH
+'
+7. 测试自带的例子，验证安装成功
+'
+cd openmpi/examples
+make
+mpirun -np 4 hello_c
+'
 
 # Trilinos
 0. 安装之前可能需要一些准备工作, 包括不限于
@@ -81,6 +113,20 @@ $SRCDIR
 chmod u+x reconfigure
 ./reconfigure
 `
+（6.0 ./reconfigure时可能会遇到找不到某些库的情形，可以通过包管理器安装：
+'
+sudo apt-get install libblas-dev #安装BLAS
+sudo apt-get install liblapack-dev #安装LAPACK
+sudo apt-get install libsuitesparse-dev #安装AMD
+'
+（6.1. 在第二台机器上./reconfigure时遇到了问题，通过把reconfigure脚本中一些功能关掉，最后成功配置：
+'
+-DTPL_ENABLE_AMD=OFF
+-DEpetraExt_BUILD_GRAPH_REORDERINGS=OFF
+-DEpetraExt_BUILD_EXPERIMENTAL=OFF  
+'
+但是非常不建议这么搞，否则配置Xyce时会遇到问题
+）
 7. make and make install, -j4表示四个进程
 `
 make -j4
@@ -88,7 +134,7 @@ make -j4 install
 `
 
 # Xyce
-1. 下载压缩包
+1. 下载压缩包：https://xyce.sandia.gov/downloads/previous-releases/
 2. 解压, 进入源代码目录
 `
 tar xzf Xyce-7.7.tar.gz
@@ -102,7 +148,37 @@ cd build
 ./configure CXXFLAGS="-O3" ARCHDIR="$HOME/XyceLibs/Parallel" CPPFLAGS="-I/usr/include/suitesparse" --enable-mpi CXX=mpicxx CC=mpicc F77=mpif77 --enable-stokhos --enable-amesos2 --prefix=$HOME/XyceInstall/Parallel
 make
 make install
-``
+
+''
+(3.1. 在第二台机器上./configure时遇到了问题，第一个问题是找不到configure脚本，通过下面的代码创建configure脚本
+'
+cd /home/v-tingdu/Xyce
+./bootstrap
+'
+然后执行
+'
+$HOME/Xyce/configure CXXFLAGS="-O3" ARCHDIR="$HOME/XyceLibs/Parallel" CPPFLAGS="-I/usr/include/suitesparse" --enable-mpi CXX=mpicxx CC=mpicc F77=mpif77 --enable-stokhos --enable-amesos2 --prefix=$HOME/XyceInstall/Parallel
+'
+但是可能会遇到错误：
+'
+checking for flex... no
+checking for lex... no
+checking for bison... no
+configure: error: "FLEX not found."
+'
+表明configure脚本在尝试配置Xyce时没有找到 flex 和 bison 工具，通过下面的代码安装，然后重新configure
+'
+sudo apt-get update  
+sudo apt-get install flex bison  
+'
+sad又遇到了新的问题，由于在配置Trilinos时禁用了AMD库，导致配置Xyce时遇到了问题，因此通过sudo apt-get install libsuitesparse-dev安装AMD库，然后重新configure，但是因为安装Trilinos时禁用了
+'
+-DEpetraExt_BUILD_GRAPH_REORDERINGS=OFF
+-DEpetraExt_BUILD_EXPERIMENTAL=OFF
+'
+导致出现了新的问题，我暂时禁用了amd支持，即在configure的时候加上--disable-amd，
+在地三台机器上，遇到了新的问题，好像是找不到Trilinos的一个库，修改Trilinos的reconfigure文件，加上-DBUILD_SHARED_LIBS=ON，重新配置，Xyce就可以重新配置
+
 4. Xyce被安装在了$HOME/XyceInstall/Parallel，也就是/home/v-tingdu/XyceInstall/Parallel, 将Xyce添加到PATH环境变量, 先打开.bashrc
 `
 nano ~/.bashrc
@@ -115,3 +191,5 @@ ctrl+X, Y, Enter键保存并退出，使更改生效
 `
 source ~/.bashrc
 `
+
+！！！！最后下载了串行版的Xyce，不需要安装openmpi，Trilinos配置时关掉mpi_enable(参考Xyce的官方文档), Xyce配置的选项参考官方文档
