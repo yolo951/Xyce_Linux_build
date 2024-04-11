@@ -193,3 +193,9 @@ source ~/.bashrc
 `
 
 ！！！！最后下载了串行版的Xyce，不需要安装openmpi，Trilinos配置时关掉mpi_enable(参考Xyce的官方文档), Xyce配置的选项参考官方文档
+$HOME/Xyce/configure CXXFLAGS=''-g'' ARCHDIR="$HOME/XyceLibs/Serial" \
+CPPFLAGS="-I/usr/include/suitesparse" \
+--enable-stokhos \
+--enable-amesos2 \
+--prefix=$HOME/XyceInstall/Serial
+其中CXXFLAGS=''-g''表示开启调试
