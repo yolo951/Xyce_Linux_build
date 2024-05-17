@@ -204,3 +204,24 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
                 dp.append(max(dp[i-2]+nums[i], dp[i-1]))
             return dp[-1]
 ``
+
+### 二维动态规划->最长回文子串
+二维动态规划的题目包括
+- 数据本身是二维的，构建的dp数组也是二维的，这种类型很直观，其实和一维dp没什么区别
+- 数据本身是一维的，但是dp数组是二维的，只要可以想到用二维dp，一般不会很困难，需要注意的地方是在用到dp[i][j]时，这个值已经被更新了
+
+``
+    class Solution:
+        def longestPalindrome(self, s: str) -> str:
+            n = len(s)
+            dp = [[0]*n for _ in range(n)]
+            for i in range(n):
+                dp[i][i] = 1
+            res = s[0]
+            for j in range(n):
+                for i in range(j):
+                    if (dp[i+1][j-1]==1 or j-i==1) and s[i]==s[j]:
+                        dp[i][j]=1
+                        if j-i+1>len(res): res = s[i:j+1]
+            return res
+``
