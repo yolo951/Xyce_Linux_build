@@ -211,6 +211,7 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 - 数据本身是一维的，但是dp数组是二维的，只要可以想到用二维dp，一般不会很困难，需要注意的地方是在用到dp[i][j]时，这个值已经被更新了
 
 ``
+
     class Solution:
         def longestPalindrome(self, s: str) -> str:
             n = len(s)
@@ -224,4 +225,25 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
                         dp[i][j]=1
                         if j-i+1>len(res): res = s[i:j+1]
             return res
+``
+
+---
+## 二分查找
+
+### 寻找旋转排序数组的最小值
+
+``
+
+    class Solution:
+        def findMin(self, nums: List[int]) -> int:
+            n = len(nums)
+            left, right = 0, n-1
+            while left<=right:
+                mid = int((left+right)/2)
+                if nums[mid]<nums[right]:
+                    right = mid
+                else:
+                    left = mid+1
+            return nums[mid]
+
 ``
