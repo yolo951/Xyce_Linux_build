@@ -189,6 +189,8 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 ---
 ## 动态规划
 
+**需要再刷的题目：97**
+
 ### 一维动态规划->打家劫舍
 
 ``
@@ -225,6 +227,29 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
                         dp[i][j]=1
                         if j-i+1>len(res): res = s[i:j+1]
             return res
+``
+
+### 二维动态规划->交错字符串
+
+``
+
+    class Solution:
+        def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
+            if not len(s1)+len(s2)==len(s3):
+                return False
+            n1 = len(s1)
+            n2 = len(s2)
+            dp = [[0]*(n2+1) for _ in range(n1+1)]
+            # dp的两个维度分别为n1+1, n2+1, 这样就可以避免考虑s1=''或者s2=''的情况
+            # dp[i, j]=1: s1[:i]和s2[:j]可以交错得到s3[:i+j+1]
+            # 不需要在子问题里面考虑是否交错
+            dp[0][0] = 1
+            for i in range(n1+1):
+                for j in range(n2+1):
+                    if (i>=1 and dp[i-1][j] and s1[i-1]==s3[i+j-1]) or (j>=1 and dp[i][j-1] and s2[j-1]==s3[i+j-1]):
+                        dp[i][j] = 1
+            return True if dp[-1][-1] else False
+
 ``
 
 ---
