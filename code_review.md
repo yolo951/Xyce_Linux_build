@@ -259,17 +259,19 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 
 ``
 
-    class Solution:
-        def findMin(self, nums: List[int]) -> int:
-            n = len(nums)
-            left, right = 0, n-1
-            while left<=right:
-                mid = int((left+right)/2)
-                if nums[mid]<nums[right]:
-                    right = mid
-                else:
-                    left = mid+1
-            return nums[mid]
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n==1: return nums[0]
+        left, right = 0, n-1
+        while left<right:  # 写成'<='容易进入死循环
+            mid = int((left+right)/2)
+            if mid+1<n and nums[mid]>nums[mid+1]: return nums[mid+1]
+            if nums[mid]<nums[right]:
+                right = mid
+            else:
+                left = mid+1
+        return nums[mid]
 
 ``
 
