@@ -254,24 +254,24 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 
 ---
 ## 二分查找
-
+**需要再刷的题目：旋转排序数组类(33，153), 162**
 ### 寻找旋转排序数组的最小值
 
 ``
 
-class Solution:
-    def findMin(self, nums: List[int]) -> int:
-        n = len(nums)
-        if n==1: return nums[0]
-        left, right = 0, n-1
-        while left<right:  # 写成'<='容易进入死循环
-            mid = int((left+right)/2)
-            if mid+1<n and nums[mid]>nums[mid+1]: return nums[mid+1]
-            if nums[mid]<nums[right]:
-                right = mid
-            else:
-                left = mid+1
-        return nums[mid]
+    class Solution:
+        def findMin(self, nums: List[int]) -> int:
+            n = len(nums)
+            if n==1: return nums[0]
+            left, right = 0, n-1
+            while left<right:  # 写成'<='容易进入死循环, 如果更新right为right = mid-1，就不会出现死循环，但是这个题不可以这样更新.另外当len(nums)=1时，不会进入循环，注意报错
+                mid = int((left+right)/2)
+                if mid+1<n and nums[mid]>nums[mid+1]: return nums[mid+1]
+                if nums[mid]<nums[right]:  # 说明转折点在[left,mid]
+                    right = mid
+                else:  # 说明转折点在[mid+1,right]
+                    left = mid+1
+            return nums[mid]
 
 ``
 
