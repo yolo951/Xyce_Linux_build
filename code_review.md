@@ -279,3 +279,32 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 
 ## 哈希表
 **需要再刷的题目：128（最长连续序列）**
+
+
+---
+
+## 链表
+
+处理技巧：哈希表，双指针
+
+### 删除链表的倒数第N个节点，哈希表或者双指针都可以，双指针米奇妙妙屋!
+
+``
+
+    class Solution:
+        def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+            
+            dummy = ListNode(0)
+            dummy.next = head
+            first, second = dummy, dummy
+            count = 0
+            while first:
+                if count > n:
+                    second = second.next
+                first = first.next
+                count += 1
+    
+            second.next = second.next.next
+            return dummy.next
+
+``
