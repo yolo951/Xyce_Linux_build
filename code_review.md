@@ -284,8 +284,9 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 ---
 
 ## 链表
+**需要再做一遍的题目：146**
 
-处理技巧：哈希表，双指针
+处理技巧：哈希表，双指针，下面两个题目代表了两类经典题目
 
 ### 删除链表的倒数第N个节点，哈希表或者双指针都可以，双指针米奇妙妙屋!
 
@@ -305,6 +306,39 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
                 count += 1
     
             second.next = second.next.next
+            return dummy.next
+
+``
+
+### 反转链表2
+
+``
+
+    class Solution:
+        def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+    
+            dummy = ListNode(0)
+            dummy.next = head
+            pre = dummy
+            count = 1
+            curr = pre.next
+            pre_curr = pre
+            while count<=right:
+                if count>left:
+                    curr_next = curr.next
+                    pre_next = pre.next
+                    pre.next = curr
+                    curr.next = pre_next
+                    pre_curr.next = curr_next
+                    curr = curr_next
+                elif count==left:
+                    pre_curr = curr
+                    curr = curr.next
+                else:
+                    pre = curr
+                    pre_curr = pre
+                    curr = curr.next
+                count +=1
             return dummy.next
 
 ``
