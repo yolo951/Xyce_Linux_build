@@ -342,3 +342,34 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
             return dummy.next
 
 ``
+
+---
+
+## 滑动窗口
+题目特征：最长子序列，最长子数组
+### 长度最小的子数组
+
+``
+
+    class Solution:
+        def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+            
+            n = len(nums)
+            min_length = float('inf')
+            each_sum = 0
+            start = 0
+    
+            for i, x in enumerate(nums):
+                each_sum += x
+                while each_sum>=target:
+                    min_length = min(min_length, i-start+1)
+                    each_sum -= nums[start]
+                    start += 1
+            return min_length if min_length<float('inf') else 0
+``
+
+---
+
+## 分治
+思想：将问题分解为若干个容易处理的子问题，再将子问题的结果合并为整个问题的结果
+**需要再做的题目：148**
