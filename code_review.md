@@ -372,4 +372,32 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 
 ## 分治
 思想：将问题分解为若干个容易处理的子问题，再将子问题的结果合并为整个问题的结果
+
 **需要再做的题目：148**
+
+---
+
+## 双指针
+
+关键点：依据什么样的标准移动左右指针
+
+**需要再做的题目：15**
+
+### 盛最多水的容器
+
+``
+
+    class Solution:
+        def maxArea(self, height: List[int]) -> int:
+            l = 0
+            r = len(height)-1
+            res = 0
+            while l<r:
+                res = max(res, (r-l)*min(height[l], height[r]))
+                if height[l]<height[r]:
+                    l+=1
+                else:
+                    r-=1
+            return res
+
+``
