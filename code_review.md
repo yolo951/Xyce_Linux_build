@@ -406,3 +406,44 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
             return res
 
 ``
+
+---
+
+## 最短路径
+
+关键字：dijkstra算法，用来解决单向或者双向有权图的最短路径（无权图使用广度优先搜索）
+
+### 网络延迟时间
+
+''
+    class Solution:
+        def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
+            matrix = [[float('inf')]*n for _ in range(n)]
+            for a,b,v in times:
+                matrix[a-1][b-1] = v
+            dis = collections.defaultdict(lambda: float('inf'))
+            dis[k-1] = 0
+            visited = set()
+            while 1:
+                if len(visited)==n:
+                    return max(list(dis.values()))
+                # 每次找出未标记点中距离start最近的点，将其标记
+                d = float('inf')
+                p = n
+                for i in dis.keys():
+                    if dis[i]<d and i not in visited:
+                        p = i
+                        d = dis[i]
+                if p==n:
+                    break
+                visited.add(p)
+                dis[p] = d
+                # 借助dis[p]更新其他点到start的距离
+                for i in range(n):
+                    if i in visited:
+                        continue
+                    dis_i = dis[p]+ matrix[p][i]
+                    dis[i] = min(dis[i], dis_i)
+            return -1
+
+''
