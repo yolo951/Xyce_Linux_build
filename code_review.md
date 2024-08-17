@@ -411,9 +411,10 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 
 ## 最短路径
 
-关键字：dijkstra算法，用来解决单向或者双向有权图的最短路径（无权图使用广度优先搜索）
 
 ### 网络延迟时间
+
+dijkstra算法：用来解决单向或者双向有权图的最短路径（无权图使用广度优先搜索）
 
 ''
     class Solution:
@@ -446,4 +447,21 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
                     dis[i] = min(dis[i], dis_i)
             return -1
 
+''
+floy算法：更新矩阵matrix，matrix[i][j]表示从i到j的最短路径
+
+''
+    matrix = [[float('inf')]*n for _ in range(n)]
+            ans = -float('inf')
+            for a,b,v in times:
+                matrix[a-1][b-1] = v
+            for i in range(n):
+                matrix[i][i] = 0
+            for kk in range(n):
+                for i in range(n):
+                    for j in range(n):
+                        matrix[i][j] = min(matrix[i][j], matrix[i][kk]+matrix[kk][j])
+            for i in range(n):
+                ans = max(ans, matrix[k-1][i])
+            return ans if ans<float('inf') else -1
 ''
