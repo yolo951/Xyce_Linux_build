@@ -417,6 +417,7 @@ python中的list是天然的栈：即满足先进后出. **记得给nxt清零**
 dijkstra算法：用来解决单向或者双向有权图的最短路径（无权图使用广度优先搜索）
 
 ''
+
     class Solution:
         def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
             matrix = [[float('inf')]*n for _ in range(n)]
@@ -451,6 +452,7 @@ dijkstra算法：用来解决单向或者双向有权图的最短路径（无权
 floy算法：更新矩阵matrix，matrix[i][j]表示从i到j的最短路径
 
 ''
+
     matrix = [[float('inf')]*n for _ in range(n)]
             ans = -float('inf')
             for a,b,v in times:
